@@ -1,1 +1,3 @@
-# SSSF21-student-week2
+# wop-starters
+
+Choose a branch and download as zip.
