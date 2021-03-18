@@ -6,6 +6,7 @@ passport.use(
   new Strategy((username, password, done) => {
     // get user by username from getUserLogin
     const user = getUserLogin(username);
+    console.log(user);
     // if user is undefined
     if (user === undefined) {
       return done(null, false);
