@@ -1,5 +1,8 @@
 const passport = require('passport');
 const Strategy = require('passport-local').Strategy;
+const passportJWT = require('passport-jwt');
+const JWTStrategy = passportJWT.Strategy;
+const ExtractJWT = passportJWT.ExtractJwt;
 const {getUserLogin} = require('../models/userModel');
 
 passport.use(
@@ -16,8 +19,26 @@ passport.use(
       return done(null, false);
     }
     // if all is ok
-    return done(null, user.id);
+    delete user.password;
+    return done(null, user);
   })
+);
+
+passport.use(
+  new JWTStrategy(
+    {
+      jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+      secretOrKey: '1234',
+    },
+    (jwtPayload, done) => {
+      console.log('payload: ', jwtPayload);
+      const user = getUserLogin(jwtPayload.email);
+      if (user === undefined) {
+        return done(null, false);
+      }
+      return done(null, jwtPayload);
+    }
+  )
 );
 
 module.exports = passport;
